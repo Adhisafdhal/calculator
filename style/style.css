@@ -21,10 +21,10 @@ body {
 #container {
   display: grid;
   grid-template-rows: 20vh 60vh;
-  background-color: #181818;
+  background-color: #5625C4;
   height: 80vh;
   width: 48vh;
-  padding: 1rem;
+  border: 1rem solid #181818;
 }
 
 .screen {
@@ -54,8 +54,13 @@ body {
   grid-column: 4/5;
 }
 
+.buttons button:nth-of-type(2) {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 img {
-  height: 1.5rem;
+  height: 1rem;
   width: auto
 }
 
@@ -66,6 +71,7 @@ button {
   color: #F7F4E9;
   font-weight:700;
   font-size: 1rem;
+  transition: all 0.3s ease;
 }
 
 h1,
@@ -81,4 +87,10 @@ h1 {
 
 .footer {
   font-size: 1rem;
+}
+
+.on {
+  background-color: #2cccc3;
+  transform: scale(0.9);
+  border-radius: 8px;
 }
