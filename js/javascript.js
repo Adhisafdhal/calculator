@@ -1,7 +1,10 @@
 const buttons = document.querySelectorAll('button');
 const output = document.querySelector('.output');
+const maxOutputWidth = output.clientWidth;
 
 buttons.forEach(button => button.addEventListener('click', input))
+
+console.log(buttons[0].innerText)
 
 function transition(e) {
   if (e.target.parentElement.localName === 'button') {
@@ -21,21 +24,32 @@ buttons.forEach(button => button.addEventListener('transitionend', removeTransit
 //remove transition effect
 
 function changeFontSize() {
+  if (output.clientWidth >= maxOutputWidth) {
+    output.style.fontSize = `1.55rem`;
+  } 
+
   if (output.innerText.length < 12) {
     output.style.fontSize = '2rem';
-  } else {
-    output.style.fontSize = '1.6rem';
-  };
+  }
 }
 
 function input(e) {
   const target = e.target.innerText;
-  if (/[0-9]/.test(target)) {
+
+  if (/[.0-9]/.test(target)) {
     if (output.innerText.length < 15) {
     output.innerText = output.innerText + target;
     };
-  } else if (e.target.dataset.name = 'delete') {
+  } else if (e.target.dataset.name || e.target.parentElement.dataset.name === 'delete') {
     output.innerText = output.innerText.slice(0, - 1);
+  } else if (e.target.dataset.name === 'clear') {
+    output.innerText = '';
+  }
+
+  if (output.innerText.length > 0) {
+    buttons[0].innerText = 'C';
+  } else {
+    buttons[0].innerText = 'AC';
   }
 
   transition(e);
@@ -59,7 +73,15 @@ function divide(a, b) {
 }
 
 function operate(a, b) {
-  if (e.target.innerText === '+') {
-    multiply(a, b);
+  if (e.target.dataset.name === 'add') {
+    add(a, b);
+  } else if (e.target.dataset.name === 'subtract') {
+    subtract(a, b);
+  } else if (e.target.dataset.name === 'multiply') {
+    multiply(a, b)
+  } else if (e.target.dataset.name === 'divide') {
+    divide(a, b);
+  } else {
+    return
   }
 }
