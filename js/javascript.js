@@ -3,11 +3,10 @@ const buttons = document.querySelectorAll('button');
 buttons.forEach(button => button.addEventListener('click', transition))
 
 function transition(e) {
-  console.log(e.target.parentElement.localName)
   if (e.target.parentElement.localName === 'button') {
-    e.target.parentElement.classList.add('on');
+    e.target.parentElement.classList.toggle('on');
   } else {
-  e.target.classList.add('on');
+  e.target.classList.toggle('on');
   }
 }
 //add transition
