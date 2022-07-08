@@ -69,15 +69,17 @@ function input(e) {
   
     } else if (secondOperand === '') {
       secondOperand = currentValue;
+      operate(firstOperand, secondOperand);
+      firstOperand = result;
+      sum.innerText = `= ${result}`;
       output.innerText = '';
+      secondOperand = '';
       currentValue = '';
       sum.innerText = '';
-    } else {
-      secondOperand = secondOperand;
-      firstOperand = firstOperand;
+      operator = e.target.innerText;
     }
 
-    operands.innerText = firstOperand + `${operator}` + secondOperand;
+    operands.innerText = firstOperand + operator + secondOperand;
   } else if (dataName === 'equal') {
     if (secondOperand === '') {
       secondOperand = currentValue;
