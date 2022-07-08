@@ -38,6 +38,11 @@ body {
   color: #000000;
 }
 
+.sum {
+  font-size: 1.5rem;
+  color: #181818;
+}
+
 .output {
   font-size: 2rem;
 }
