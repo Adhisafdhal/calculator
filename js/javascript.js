@@ -102,7 +102,7 @@ function input(e) {
     };
   }
 
-  if (output.innerText.length > 0) {
+  if (output.innerText.length > 0 || operands.innerText.length > 0) {
     buttons[0].innerText = 'C';
   } else {
     buttons[0].innerText = 'AC';
@@ -154,6 +154,7 @@ function operate(a, b) {
 //This function will decide which mathematical operation will run according to the current operator
 
 function clear() {
+  buttons[0].innerText = 'AC';
   output.innerText = '';
   operands.innerText = '';
   sum.innerText = '';
