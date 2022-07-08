@@ -80,7 +80,6 @@ function input(e) {
       output.innerText = '';
       secondOperand = '';
       currentValue = '';
-      sum.innerText = '';
       operator = e.target.innerText;
     }
 
