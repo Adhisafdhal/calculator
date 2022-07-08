@@ -2,11 +2,12 @@ const buttons = document.querySelectorAll('button');
 const output = document.querySelector('.output');
 const operands = document.querySelector('.input');
 const sum = document.querySelector('.sum')
+let calculated = false;
 let currentValue = '';
 let firstOperand = '';
 let secondOperand = '';
 let operator = '';
-let result = '';
+let result;
 const maxOutputWidth = output.clientWidth;
 
 buttons.forEach(button => button.addEventListener('click', input))
@@ -45,9 +46,13 @@ function input(e) {
 
   if (/[.0-9]/.test(target)) {
     if (output.innerText.length < 15) {
-    output.innerText = output.innerText + target;
-    currentValue += target;
-    operands.innerText += `${target}`;
+    if (firstOperand === result && operator === '') {
+      clear();
+    } else {
+      output.innerText = output.innerText + target;
+      currentValue += target;
+      operands.innerText += `${target}`;
+    }
     };
   } else if (dataName === 'delete'|| e.target.parentElement.dataset.name === 'delete') {
     if (output.innerText.length > 0) {
@@ -67,7 +72,7 @@ function input(e) {
       output.innerText = '';
       currentValue = '';
   
-    } else if (secondOperand === '') {
+    } else if (secondOperand === '' && currentValue !== '') {
       secondOperand = currentValue;
       operate(firstOperand, secondOperand);
       firstOperand = result;
@@ -82,9 +87,9 @@ function input(e) {
     operands.innerText = firstOperand + operator + secondOperand;
   } else if (dataName === 'equal') {
     if (secondOperand === '') {
-      secondOperand = currentValue;
-      currentValue = '';
-    }
+    secondOperand = currentValue;
+    };
+
     if (firstOperand !== '' && secondOperand !== '') {
       operate(firstOperand, secondOperand);
       operands.innerText = firstOperand + operator + secondOperand;
@@ -93,7 +98,8 @@ function input(e) {
       secondOperand = '';
       output.innerText = '';
       operator = '';
-    }
+      currentValue = '';
+    };
   }
 
   if (output.innerText.length > 0) {
@@ -154,5 +160,15 @@ function clear() {
   firstOperand = '';
   secondOperand = '';
   currentValue = '';
+  operator = '';
 }
 //Reset all the value into empty string
+
+function checkCalculated () {
+  if (firstOperand === result) {}
+//after the first calculation 
+//if both operand put out the same result and the use try to click the number stop the user from inputting new operand
+//and if the user doesn't have an operand stop the user from inputting value
+}
+//make a function that toggle calculated between true and false if the user try to enter the number on result value
+//reset all the calculation?
