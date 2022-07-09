@@ -34,15 +34,15 @@ buttons.forEach(button => button.addEventListener('transitionend', removeTransit
 function changeFontSize() {
 
   if (output.clientWidth > maxOutputWidth) {
-    if (currentFont > 1.4) {
-    output.style.fontSize = `${currentFont -= 0.2}` + 'rem'; 
+    if (currentFont > 1) {
+    output.style.fontSize = `${currentFont -= 0.3}` + 'rem'; 
     }
     return currentFont;
   }
   
   if (output.innerText.length < 12) {
     if (currentFont < 2) {
-    output.style.fontSize = `${currentFont += 0.2}` + 'rem';
+    output.style.fontSize = `${currentFont += 0.3}` + 'rem';
     }
   }
 }
@@ -127,11 +127,14 @@ function input(e) {
   transition(e);
   changeFontSize();
  
-  if (result.toString().length > 15) {
+  if (result.toString().length >= 20) {
+    sum.style.fontSize = '1rem'
+  } else if (result.toString().length > 15) {
     sum.style.fontSize = '1.2rem';
   } else {
     sum.style.fontSize = '1.5rem';
   }
+  //make sum fontSize responsive
 }
 //currentValue will safe the input of the number and will input the number to the firstOperand or secondOperand 
 //if the user click the number button the screen will output the number button and input the number as operand.
@@ -225,4 +228,5 @@ function showCalculation () {
     secondOperands.innerText = '';
   }  
 }
+//output the current calculation
 
