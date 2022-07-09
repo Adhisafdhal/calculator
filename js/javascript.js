@@ -5,12 +5,11 @@ const secondOperands = document.querySelector('.long');
 const sum = document.querySelector('.sum')
 output.style.fontSize = '2rem';
 let currentFont = output.style.fontSize.slice(0, 1);
-let calculated = false;
 let currentValue = '';
 let firstOperand = '';
 let secondOperand = '';
 let operator = '';
-let result;
+let result = 0;
 const maxOutputWidth = output.clientWidth;
 
 buttons.forEach(button => button.addEventListener('click', input))
@@ -54,7 +53,7 @@ function input(e) {
   const dataName = e.target.dataset.name;
 
   function separateInput() {
-    if (operands.innerText.length !== '' && firstOperand.length > 9 && operator !== '') {
+    if (operator !== '' && firstOperand.toString().length > 8) {
       secondOperands.innerText += `${target}`;
     } else {
       operands.innerText += `${target}`
@@ -73,13 +72,19 @@ function input(e) {
     };
   } else if (dataName === 'dot') {
     if (currentValue.includes('.') === false) {
-    output.innerText = output.innerText + target
-    currentValue += target;
+      output.innerText = output.innerText + target
+      currentValue += target;
+      separateInput();
     } 
   } else if (dataName === 'delete'|| e.target.parentElement.dataset.name === 'delete') {
-    if (output.innerText.length > 0) {
-      operands.innerText = operands.innerText.slice(0, -1);
+    if (output.innerText.length > 0 || secondOperands.innerText.length > 0) {
+      if (secondOperands !== '' && operator !== '') {
+        secondOperands.innerText = secondOperands.innerText.slice(0, -1);
+      } 
+      else {
+        operands.innerText = operands.innerText.slice(0, -1);
       }
+    }
     output.innerText = output.innerText.slice(0, - 1);
     currentValue = currentValue.slice(0, -1);
   } else if (dataName === 'clear') {
@@ -121,29 +126,52 @@ function input(e) {
 
   transition(e);
   changeFontSize();
+ 
+  if (result.toString().length > 15) {
+    sum.style.fontSize = '1.2rem';
+  } else {
+    sum.style.fontSize = '1.5rem';
+  }
 }
 //currentValue will safe the input of the number and will input the number to the firstOperand or secondOperand 
 //if the user click the number button the screen will output the number button and input the number as operand.
 //if the user haven't chose the operator input the first clicked operator else return/
 
 function add(a, b) {
+    
   result = a + b;
-  operator = '+'
+  result = Math.round(result * 100) / 100;
+  if (result.toString().includes('e')) {
+    result = result.toPrecision(1 + 4);
+    result = result / 1;
+  }
 }
 
 function subtract(a, b) {
   result = a - b;
-  operator = '-';
+  result = Math.round(result * 100) / 100;
+  if (result.toString().includes('e')) {
+    result = result.toPrecision(1 + 4);
+    result = result / 1;
+  }
 }
 
 function multiply(a, b) {
   result = a * b;
-  operator = '×'
+  result = Math.round(result * 100) / 100;
+  if (result.toString().includes('e')) {
+    result = result.toPrecision(1 + 4);
+    result = result / 1;
+  }
 }
 
 function divide(a, b) {
   result = a / b;
-  operator = '÷'
+  result = Math.round(result * 100) / 100;
+  if (result.toString().includes('e')) {
+    result = result.toPrecision(1 + 4);
+    result = result / 1;
+  }
 }
 
 function operate(a, b) {
@@ -189,16 +217,12 @@ function calculate () {
 //calculate the input and output it on screen
 
 function showCalculation () {
-  if (operands.innerText.length > 10 || secondOperands.innerText.length > 10) {
+  if (firstOperand.length > 8 || secondOperand.length > 8) {
     operands.innerText = firstOperand + operator;
     secondOperands.innerText = secondOperand;
   } else {
     operands.innerText = firstOperand + operator + secondOperand;
+    secondOperands.innerText = '';
   }  
 }
 
-function checkDot() {
-  if (currentValue.contains) {
-  
-  }
-}
