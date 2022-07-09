@@ -1,7 +1,10 @@
 const buttons = document.querySelectorAll('button');
 const output = document.querySelector('.output');
-const operands = document.querySelector('.input');
+const operands = document.querySelector('.short');
+const secondOperands = document.querySelector('.long');
 const sum = document.querySelector('.sum')
+output.style.fontSize = '2rem';
+let currentFont = output.style.fontSize.slice(0, 1);
 let calculated = false;
 let currentValue = '';
 let firstOperand = '';
@@ -30,12 +33,18 @@ buttons.forEach(button => button.addEventListener('transitionend', removeTransit
 //remove transition effect
 
 function changeFontSize() {
-  if (output.clientWidth > maxOutputWidth) {
-    output.style.fontSize = `1.55rem`;
-  } 
 
+  if (output.clientWidth > maxOutputWidth) {
+    if (currentFont > 1.4) {
+    output.style.fontSize = `${currentFont -= 0.2}` + 'rem'; 
+    }
+    return currentFont;
+  }
+  
   if (output.innerText.length < 12) {
-    output.style.fontSize = '2rem';
+    if (currentFont < 2) {
+    output.style.fontSize = `${currentFont += 0.2}` + 'rem';
+    }
   }
 }
 //This will change the font size too big too fit in its container
@@ -44,15 +53,24 @@ function input(e) {
   const target = e.target.innerText;
   const dataName = e.target.dataset.name;
 
+  function separateInput() {
+    if (operands.innerText.length !== '' && firstOperand.length > 9 && operator !== '') {
+      secondOperands.innerText += `${target}`;
+    } else {
+      operands.innerText += `${target}`
+    }
+  }
+
   if (/[.0-9]/.test(target)) {
+    console.log(firstOperand)
     if (output.innerText.length < 15) {
     if (firstOperand === result && operator === '') {
       clear();
     } else {
       output.innerText = output.innerText + target;
       currentValue += target;
-      operands.innerText += `${target}`;
-    }
+      separateInput();
+      }
     };
   } else if (dataName === 'delete'|| e.target.parentElement.dataset.name === 'delete') {
     if (output.innerText.length > 0) {
@@ -63,6 +81,7 @@ function input(e) {
   } else if (dataName === 'clear') {
     clear();
   } else if (dataName === 'plus' || dataName === 'subtract' || dataName == 'multiply' || dataName === 'divide') {
+
     if (operator === '') {
       operator = e.target.innerText;
     };
@@ -74,30 +93,19 @@ function input(e) {
   
     } else if (secondOperand === '' && currentValue !== '') {
       secondOperand = currentValue;
-      operate(firstOperand, secondOperand);
-      firstOperand = result;
-      sum.innerText = `= ${result}`;
-      output.innerText = '';
-      secondOperand = '';
-      currentValue = '';
+      calculate();
       operator = e.target.innerText;
     }
-
-    operands.innerText = firstOperand + operator + secondOperand;
+    showCalculation();
   } else if (dataName === 'equal') {
     if (secondOperand === '') {
     secondOperand = currentValue;
     };
 
     if (firstOperand !== '' && secondOperand !== '') {
-      operate(firstOperand, secondOperand);
-      operands.innerText = firstOperand + operator + secondOperand;
-      firstOperand = result;
-      sum.innerText = `= ${result}`;
-      secondOperand = '';
-      output.innerText = '';
+      showCalculation();
+      calculate();
       operator = '';
-      currentValue = '';
     };
   }
 
@@ -153,6 +161,7 @@ function operate(a, b) {
 //This function will decide which mathematical operation will run according to the current operator
 
 function clear() {
+  output.style.fontSize = '2rem';
   buttons[0].innerText = 'AC';
   output.innerText = '';
   operands.innerText = '';
@@ -161,14 +170,25 @@ function clear() {
   secondOperand = '';
   currentValue = '';
   operator = '';
+  secondOperands.innerText = '';
 }
 //Reset all the value into empty string
 
-function checkCalculated () {
-  if (firstOperand === result) {}
-//after the first calculation 
-//if both operand put out the same result and the use try to click the number stop the user from inputting new operand
-//and if the user doesn't have an operand stop the user from inputting value
+function calculate () {
+  operate(firstOperand, secondOperand);
+  firstOperand = result;
+  sum.innerText = `= ${result}`;
+  output.innerText = '';
+  secondOperand = '';
+  currentValue = '';
 }
-//make a function that toggle calculated between true and false if the user try to enter the number on result value
-//reset all the calculation?
+//calculate the input and output it on screen
+
+function showCalculation () {
+  if (operands.innerText.length > 10 || secondOperands.innerText.length > 10) {
+    operands.innerText = firstOperand + operator;
+    secondOperands.innerText = secondOperand;
+  } else {
+    operands.innerText = firstOperand + operator + secondOperand;
+  }  
+}
