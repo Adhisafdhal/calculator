@@ -62,7 +62,6 @@ function input(e) {
   }
 
   if (/[.0-9]/.test(target)) {
-    console.log(firstOperand)
     if (output.innerText.length < 15) {
     if (firstOperand === result && operator === '') {
       clear();
@@ -98,7 +97,7 @@ function input(e) {
     }
     showCalculation();
   } else if (dataName === 'equal') {
-    if (secondOperand === '') {
+    if (secondOperand === '' && operator !== '') {
     secondOperand = currentValue;
     };
 
