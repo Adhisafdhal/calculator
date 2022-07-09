@@ -61,7 +61,7 @@ function input(e) {
     }
   }
 
-  if (/[.0-9]/.test(target)) {
+  if (/[0-9]/.test(target)) {
     if (output.innerText.length < 15) {
     if (firstOperand === result && operator === '') {
       clear();
@@ -71,6 +71,11 @@ function input(e) {
       separateInput();
       }
     };
+  } else if (dataName === 'dot') {
+    if (currentValue.includes('.') === false) {
+    output.innerText = output.innerText + target
+    currentValue += target;
+    } 
   } else if (dataName === 'delete'|| e.target.parentElement.dataset.name === 'delete') {
     if (output.innerText.length > 0) {
       operands.innerText = operands.innerText.slice(0, -1);
@@ -190,4 +195,10 @@ function showCalculation () {
   } else {
     operands.innerText = firstOperand + operator + secondOperand;
   }  
+}
+
+function checkDot() {
+  if (currentValue.contains) {
+  
+  }
 }
