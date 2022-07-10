@@ -45,22 +45,24 @@ function changeFontSize() {
     }
   }
 }
+
+function changeSumFont(result) {
+  if (result.toString().length >= 20) {
+    sum.style.fontSize = '1rem'
+  } else if (result.toString().length > 15) {
+    sum.style.fontSize = '1.2rem';
+  } else {
+    sum.style.fontSize = '1.5rem';
+  }
+}
+
 //This will change the font size too big too fit in its container
 
 function input(e) {
   const target = e.target.innerText;
   const parentTarget = e.target.parentElement.dataset.name;
   const dtName = e.target.dataset.name;
-
   clearError();
-
-  function separateInput() {
-    if (operator !== '' && firstOperand.toString().length > 8) {
-      secondOperands.innerText += `${target}`;
-    } else {
-      operands.innerText += `${target}`
-    }
-  }
 
   if (/[0-9]/.test(target)) {
     if (output.innerText.length < 15) {
@@ -69,35 +71,23 @@ function input(e) {
     } else {
       output.innerText = output.innerText + target;
       currentValue += target;
-      separateInput();
+      separateInput(target);
       }
     }
   } else if (dtName === 'dot') {
     if (currentValue.includes('.') === false) {
       output.innerText = output.innerText + target
       currentValue += target;
-      separateInput();
+      separateInput(target);
     } 
   } else if (dtName === 'delete' || parentTarget=== 'delete') {
-    if (currentValue.toString().length > 0) {
-      if (firstOperand.toString().length > 8 && operator !== '') {
-        secondOperands.innerText = secondOperands.innerText.slice(0, -1);
-      } else {
-        operands.innerText = operands.innerText.slice(0, -1);
-      }
-      console.log(firstOperand.toString().length)
-    }
-    output.innerText = output.innerText.slice(0, - 1);
-    currentValue = currentValue.slice(0, -1);
+    deleteOperand();
     //Delete and display current value
   } else if (dtName === 'clear') {
     clear();
   } else if (dtName === 'plus' || dtName === 'min' || dtName == 'times' || dtName === 'dvd' || dtName === 'pwr') {
     if (operator === '' ) {
       operator = e.target.innerText;
-    }
-    if (currentValue === '') {
-      operator === '';
     }
 
     if (firstOperand === '') {
@@ -119,7 +109,6 @@ function input(e) {
     if (secondOperand === '' && operator !== '') {
     secondOperand = currentValue;
     }
-    console.log(operator, firstOperand, secondOperand);
     if (firstOperand !== '' && secondOperand !== '') {
       showCalculation();
       calculate();
@@ -143,14 +132,7 @@ function input(e) {
   transition(e);
   changeFontSize();
   toggleClear();
- 
-  if (result.toString().length >= 20) {
-    sum.style.fontSize = '1rem'
-  } else if (result.toString().length > 15) {
-    sum.style.fontSize = '1.2rem';
-  } else {
-    sum.style.fontSize = '1.5rem';
-  }
+  changeSumFont(result);
   //make sum fontSize responsive
 }
 //currentValue will safe the input of the number and will input the number to the firstOperand or secondOperand 
@@ -282,7 +264,7 @@ function toggleClear() {
   buttons[0].innerText = 'AC';
   }
 }
-
+//toggle clear button text
 function clearError () {
   if (sum.innerText.includes('ERROR')) {
     clear();
@@ -292,3 +274,24 @@ function clearError () {
     clear();
   }
 }
+//clear display if divided by zero
+function separateInput(target) {
+  if (operator !== '' && firstOperand.toString().length > 8) {
+    secondOperands.innerText += `${target}`;
+  } else {
+    operands.innerText += `${target}`
+  }
+}
+//insert input to screen
+function deleteOperand() {
+  if (currentValue.toString().length > 0) {
+    if (firstOperand.toString().length > 8 && operator !== '') {
+      secondOperands.innerText = secondOperands.innerText.slice(0, -1);
+    } else {
+      operands.innerText = operands.innerText.slice(0, -1);
+    }
+  }
+  output.innerText = output.innerText.slice(0, - 1);
+  currentValue = currentValue.slice(0, -1);
+}
+//reduce currentValue length
