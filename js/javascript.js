@@ -49,7 +49,8 @@ function changeFontSize() {
 
 function input(e) {
   const target = e.target.innerText;
-  const dataName = e.target.dataset.name;
+  const parentTarget = e.target.parentElement.dataset.name;
+  const dtName = e.target.dataset.name;
 
   function separateInput() {
     if (operator !== '' && firstOperand.toString().length > 8) {
@@ -69,13 +70,13 @@ function input(e) {
       separateInput();
       }
     }
-  } else if (dataName === 'dot') {
+  } else if (dtName === 'dot') {
     if (currentValue.includes('.') === false) {
       output.innerText = output.innerText + target
       currentValue += target;
       separateInput();
     } 
-  } else if (dataName === 'delete'|| e.target.parentElement.dataset.name === 'delete') {
+  } else if (dtName === 'delete' || parentTarget=== 'delete') {
     if (currentValue > 0) {
       if (firstOperand.toString().length > 8 && operator !== '') {
         secondOperands.innerText = secondOperands.innerText.slice(0, -1);
@@ -86,11 +87,10 @@ function input(e) {
     output.innerText = output.innerText.slice(0, - 1);
     currentValue = currentValue.slice(0, -1);
     //Delete and display current value
-  } else if (dataName === 'clear') {
+  } else if (dtName === 'clear') {
     clear();
-  } else if (dataName === 'plus' || dataName === 'subtract' || dataName == 'multiply' || dataName === 'divide') {
-
-    if (operator === '') {
+  } else if (dtName === 'plus' || dtName === 'min' || dtName == 'times' || dtName === 'dvd' || dtName === 'pwr') {
+    if (operator === '' ) {
       operator = e.target.innerText;
     }
 
@@ -98,14 +98,18 @@ function input(e) {
       firstOperand = currentValue;
       output.innerText = '';
       currentValue = '';
-  
+      showCalculation();
     } else if (secondOperand === '' && currentValue !== '') {
       secondOperand = currentValue;
       calculate();
       operator = e.target.innerText;
+      showCalculation();
+    } else {
+      return;
     }
-    showCalculation();
-  } else if (dataName === 'equal') {
+        operator = e.target.innerText;
+    
+  } else if (dtName === 'equal') {
     if (secondOperand === '' && operator !== '') {
     secondOperand = currentValue;
     }
@@ -115,16 +119,20 @@ function input(e) {
       calculate();
       operator = '';
     }
-  }
-
-  if (output.innerText.length > 0 || operands.innerText.length > 0) {
-    buttons[0].innerText = 'C';
+  } else if (dtName === 'percentage') {
+    firstOperand = currentValue;
+    secondOperand = 100;
+    operator = '%';
+    showCalculation();
+    calculate();
+    operator = '';
   } else {
-    buttons[0].innerText = 'AC';
+    return
   }
 
   transition(e);
   changeFontSize();
+  toggleClear()
  
   if (result.toString().length >= 20) {
     sum.style.fontSize = '1rem'
@@ -176,6 +184,24 @@ function divide(a, b) {
   }
 }
 
+function toExponent(a, b) {
+  result = a ** b;
+  result = Math.round(result * 10000) / 10000;
+  if (result.toString().includes('e')) {
+    result = result.toPrecision(1 + 4);
+    result = result / 1;
+  }
+}
+
+function toPercentage(a, b) {
+  result = a / b;
+  result = Math.round(result * 10000) / 10000;
+  if (result.toString().includes('e')) {
+    result = result.toPrecision(1 + 4);
+    result = result / 1;
+  }
+}
+
 function operate(a, b) {
   a = Number(a);
   b = Number(b);
@@ -188,6 +214,10 @@ function operate(a, b) {
     multiply(a, b)
   } else if (operator === '÷') {
     divide(a, b);
+  } else if (operator === '^') {
+    toExponent(a,b);
+  } else if (operator === '%') {
+    toPercentage(a, b);
   } else {
     return
   }
@@ -228,4 +258,11 @@ function showCalculation () {
   }  
 }
 //output the current calculation
+function toggleClear() {
+  if (output.innerText.length > 0 || operands.innerText.length > 0) {
+    buttons[0].innerText = 'C';
+  } else {
+  buttons[0].innerText = 'AC';
+  }
+}
 
