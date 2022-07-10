@@ -37,7 +37,6 @@ function changeFontSize() {
     if (currentFont > 1) {
     output.style.fontSize = `${currentFont -= 0.3}` + 'rem'; 
     }
-    return currentFont;
   }
   
   if (output.innerText.length < 12) {
@@ -69,7 +68,7 @@ function input(e) {
       currentValue += target;
       separateInput();
       }
-    };
+    }
   } else if (dataName === 'dot') {
     if (currentValue.includes('.') === false) {
       output.innerText = output.innerText + target
@@ -93,7 +92,7 @@ function input(e) {
 
     if (operator === '') {
       operator = e.target.innerText;
-    };
+    }
 
     if (firstOperand === '') {
       firstOperand = currentValue;
@@ -109,13 +108,13 @@ function input(e) {
   } else if (dataName === 'equal') {
     if (secondOperand === '' && operator !== '') {
     secondOperand = currentValue;
-    };
+    }
 
     if (firstOperand !== '' && secondOperand !== '') {
       showCalculation();
       calculate();
       operator = '';
-    };
+    }
   }
 
   if (output.innerText.length > 0 || operands.innerText.length > 0) {
@@ -143,7 +142,7 @@ function input(e) {
 function add(a, b) {
     
   result = a + b;
-  result = Math.round(result * 100) / 100;
+  result = Math.round(result * 10000) / 10000;
   if (result.toString().includes('e')) {
     result = result.toPrecision(1 + 4);
     result = result / 1;
@@ -152,7 +151,7 @@ function add(a, b) {
 
 function subtract(a, b) {
   result = a - b;
-  result = Math.round(result * 100) / 100;
+  result = Math.round(result * 10000) / 10000;
   if (result.toString().includes('e')) {
     result = result.toPrecision(1 + 4);
     result = result / 1;
@@ -161,7 +160,7 @@ function subtract(a, b) {
 
 function multiply(a, b) {
   result = a * b;
-  result = Math.round(result * 100) / 100;
+  result = Math.round(result * 10000) / 10000;
   if (result.toString().includes('e')) {
     result = result.toPrecision(1 + 4);
     result = result / 1;
@@ -170,7 +169,7 @@ function multiply(a, b) {
 
 function divide(a, b) {
   result = a / b;
-  result = Math.round(result * 100) / 100;
+  result = Math.round(result * 10000) / 10000;
   if (result.toString().includes('e')) {
     result = result.toPrecision(1 + 4);
     result = result / 1;
