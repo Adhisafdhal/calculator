@@ -90,7 +90,6 @@ function input(e) {
 
 function keyInput(e) {
   const key = e.keyCode;
-  console.log(key)
   if (key >47 && key < 58) {
   const number = document.querySelector(`button[data-keycode="${e.keyCode}"]`);
   const target = number.innerText;
@@ -107,6 +106,10 @@ function keyInput(e) {
     checkCalculationState(target);
   } else if (key === 80) {
     showPercentage();
+  } else if (key === 190) {
+    const operatorTarget = document.querySelector(`button[data-keycode="${e.keyCode}"]`);
+    const target = operatorTarget.innerText;
+    addFloat(target);
   } else {
     return;
   }
