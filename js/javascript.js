@@ -77,16 +77,16 @@ function input(e) {
       separateInput();
     } 
   } else if (dataName === 'delete'|| e.target.parentElement.dataset.name === 'delete') {
-    if (output.innerText.length > 0 || secondOperands.innerText.length > 0) {
-      if (secondOperands !== '' && operator !== '') {
+    if (currentValue > 0) {
+      if (firstOperand.toString().length > 8 && operator !== '') {
         secondOperands.innerText = secondOperands.innerText.slice(0, -1);
-      } 
-      else {
+      } else {
         operands.innerText = operands.innerText.slice(0, -1);
       }
     }
     output.innerText = output.innerText.slice(0, - 1);
     currentValue = currentValue.slice(0, -1);
+    //Delete and display current value
   } else if (dataName === 'clear') {
     clear();
   } else if (dataName === 'plus' || dataName === 'subtract' || dataName == 'multiply' || dataName === 'divide') {
