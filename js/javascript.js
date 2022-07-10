@@ -12,7 +12,8 @@ let operator = '';
 let result = 0;
 const maxOutputWidth = output.clientWidth;
 
-buttons.forEach(button => button.addEventListener('click', input))
+buttons.forEach(button => button.addEventListener('click', input));
+document.addEventListener('keydown', keyInput);
 
 function transition(e) {
   if (e.target.parentElement.localName === 'button') {
@@ -63,81 +64,34 @@ function input(e) {
   const parentTarget = e.target.parentElement.dataset.name;
   const dtName = e.target.dataset.name;
   clearError();
-
-  if (/[0-9]/.test(target)) {
-    if (output.innerText.length < 15) {
-    if (firstOperand === result && operator === '') {
-      clear();
-    } else {
-      output.innerText = output.innerText + target;
-      currentValue += target;
-      separateInput(target);
-      }
-    }
-  } else if (dtName === 'dot') {
-    if (currentValue.includes('.') === false) {
-      output.innerText = output.innerText + target
-      currentValue += target;
-      separateInput(target);
-    } 
-  } else if (dtName === 'delete' || parentTarget=== 'delete') {
+  inputNumber(target);
+  addFloat(target);
+  if (dtName === 'delete' || parentTarget=== 'delete') {
     deleteOperand();
     //Delete and display current value
   } else if (dtName === 'clear') {
     clear();
   } else if (dtName === 'plus' || dtName === 'min' || dtName == 'times' || dtName === 'dvd' || dtName === 'pwr') {
-    if (operator === '' ) {
-      operator = e.target.innerText;
-    }
-
-    if (firstOperand === '') {
-      firstOperand = currentValue;
-      output.innerText = '';
-      currentValue = '';
-      showCalculation();
-    } else if (secondOperand === '' && currentValue !== '') {
-      secondOperand = currentValue;
-      calculate();
-      operator = e.target.innerText;
-      showCalculation();
-    } else {
-      showCalculation();
-    }
-    
-    clearError();
+    checkCalculationState(target)
   } else if (dtName === 'equal') {
-    if (secondOperand === '' && operator !== '') {
-    secondOperand = currentValue;
-    }
-    if (firstOperand !== '' && secondOperand !== '') {
-      showCalculation();
-      calculate();
-      operator = '';
-    }
+    isEqual();
   } else if (dtName === 'percentage') {
-    if (currentValue !== '') {
-    firstOperand = currentValue;
-    secondOperand = 100;
-    operator = '%';
-    showCalculation();
-    calculate();
-    operator = '';
-    } else {
-    clearError();
-    }
+    showPercentage();
   } else {
     return;
   }
-
   transition(e);
-  changeFontSize();
   toggleClear();
-  changeSumFont(result);
   //make sum fontSize responsive
 }
 //currentValue will safe the input of the number and will input the number to the firstOperand or secondOperand 
 //if the user click the number button the screen will output the number button and input the number as operand.
 //if the user haven't chose the operator input the first clicked operator else return/
+
+function keyInput(e) {
+  console.log(e.keyCode);
+  
+}
 
 function add(a, b) {
     
@@ -242,13 +196,14 @@ function calculate () {
   output.innerText = '';
   secondOperand = '';
   currentValue = '';
+  changeSumFont(result);
 }
 //calculate the input and output it on screen
 
 function showCalculation () {
   if (result === 'ERROR') {
     operands.innerText = '';
-  } else if (firstOperand.length > 8 || secondOperand.length > 8) {
+  } else if (firstOperand.toString().length > 8 || secondOperand.toString().length > 8) {
     operands.innerText = firstOperand + operator;
     secondOperands.innerText = secondOperand;
   } else {
@@ -275,6 +230,33 @@ function clearError () {
   }
 }
 //clear display if divided by zero
+
+function inputNumber(target) {
+  if (/[0-9]/.test(target)) {
+    if (output.innerText.length < 15) {
+    if (firstOperand === result && operator === '') {
+      clear();
+    } else {
+      output.innerText = output.innerText + target;
+      currentValue += target;
+      separateInput(target);
+      }
+    }
+  }
+  changeFontSize();
+}
+
+function addFloat(target) {
+  if (target === '.') {
+    if (currentValue.includes('.') === false) {
+      output.innerText = output.innerText + target
+      currentValue += target;
+      separateInput(target);
+    } 
+  }
+  changeFontSize();
+}
+//input number
 function separateInput(target) {
   if (operator !== '' && firstOperand.toString().length > 8) {
     secondOperands.innerText += `${target}`;
@@ -283,6 +265,56 @@ function separateInput(target) {
   }
 }
 //insert input to screen
+function checkCalculationState(target) {
+  if (operator === '' ) {
+    operator = target;
+  }
+
+  if (firstOperand === '') {
+    firstOperand = currentValue;
+    output.innerText = '';
+    currentValue = '';
+    showCalculation();
+  } else if (secondOperand === '' && currentValue !== '') {
+    secondOperand = currentValue;
+    calculate();
+    operator = target;
+    showCalculation();
+  } else {
+    showCalculation();
+  }
+  
+  clearError();
+}
+//show calculation and calculate if both operand exist
+function isEqual() {
+  if (secondOperand === '' && operator !== '') {
+    secondOperand = currentValue;
+    }
+
+  if (firstOperand !== '' && secondOperand !== '') {
+      showCalculation();
+      calculate();
+      operator = '';
+  }
+}
+//show the result
+function showPercentage() {
+  if (firstOperand !== '') {
+    if (firstOperand === '') {
+    firstOperand = currentValue;
+    } else {
+      firstOperand = firstOperand;
+    }
+    secondOperand = 100;
+    operator = '%';
+    showCalculation();
+    calculate();
+    operator = '';
+  } else {
+    clearError();
+  }
+}
 function deleteOperand() {
   if (currentValue.toString().length > 0) {
     if (firstOperand.toString().length > 8 && operator !== '') {
@@ -295,3 +327,7 @@ function deleteOperand() {
   currentValue = currentValue.slice(0, -1);
 }
 //reduce currentValue length
+
+function keyboardInput(target) {
+console.log(target)
+}
