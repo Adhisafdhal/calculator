@@ -105,15 +105,14 @@ function input(e) {
       operator = e.target.innerText;
       showCalculation();
     } else {
-      return;
+      showCalculation();
     }
-        operator = e.target.innerText;
     
   } else if (dtName === 'equal') {
     if (secondOperand === '' && operator !== '') {
     secondOperand = currentValue;
     }
-
+    console.log(operator, firstOperand, secondOperand);
     if (firstOperand !== '' && secondOperand !== '') {
       showCalculation();
       calculate();
