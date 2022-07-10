@@ -90,6 +90,7 @@ function input(e) {
 
 function keyInput(e) {
   const key = e.keyCode;
+  console.log(key)
   if (key >47 && key < 58) {
   const number = document.querySelector(`button[data-keycode="${e.keyCode}"]`);
   const target = number.innerText;
@@ -318,20 +319,17 @@ function isEqual() {
 //show the result
 function showPercentage() {
   if (firstOperand !== '') {
-    if (firstOperand === '') {
-    firstOperand = currentValue;
-    } else {
-      firstOperand = firstOperand;
-    }
-    secondOperand = 100;
-    operator = '%';
-    showCalculation();
-    calculate();
-    operator = '';
+    firstOperand = firstOperand;
   } else {
-    clearError();
+    firstOperand = currentValue;
   }
+  secondOperand = 100;
+  operator = '%';
+  showCalculation();
+  calculate();
+  operator = '';
 }
+//show result of percentage
 function deleteOperand() {
   if (currentValue.toString().length > 0) {
     if (firstOperand.toString().length > 8 && operator !== '') {
