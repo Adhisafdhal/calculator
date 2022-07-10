@@ -52,6 +52,8 @@ function input(e) {
   const parentTarget = e.target.parentElement.dataset.name;
   const dtName = e.target.dataset.name;
 
+  clearError();
+
   function separateInput() {
     if (operator !== '' && firstOperand.toString().length > 8) {
       secondOperands.innerText += `${target}`;
@@ -77,12 +79,13 @@ function input(e) {
       separateInput();
     } 
   } else if (dtName === 'delete' || parentTarget=== 'delete') {
-    if (currentValue > 0) {
+    if (currentValue.toString().length > 0) {
       if (firstOperand.toString().length > 8 && operator !== '') {
         secondOperands.innerText = secondOperands.innerText.slice(0, -1);
       } else {
         operands.innerText = operands.innerText.slice(0, -1);
       }
+      console.log(firstOperand.toString().length)
     }
     output.innerText = output.innerText.slice(0, - 1);
     currentValue = currentValue.slice(0, -1);
@@ -92,6 +95,9 @@ function input(e) {
   } else if (dtName === 'plus' || dtName === 'min' || dtName == 'times' || dtName === 'dvd' || dtName === 'pwr') {
     if (operator === '' ) {
       operator = e.target.innerText;
+    }
+    if (currentValue === '') {
+      operator === '';
     }
 
     if (firstOperand === '') {
@@ -108,6 +114,7 @@ function input(e) {
       showCalculation();
     }
     
+    clearError();
   } else if (dtName === 'equal') {
     if (secondOperand === '' && operator !== '') {
     secondOperand = currentValue;
@@ -119,19 +126,23 @@ function input(e) {
       operator = '';
     }
   } else if (dtName === 'percentage') {
+    if (currentValue !== '') {
     firstOperand = currentValue;
     secondOperand = 100;
     operator = '%';
     showCalculation();
     calculate();
     operator = '';
+    } else {
+    clearError();
+    }
   } else {
-    return
+    return;
   }
 
   transition(e);
   changeFontSize();
-  toggleClear()
+  toggleClear();
  
   if (result.toString().length >= 20) {
     sum.style.fontSize = '1rem'
@@ -175,12 +186,16 @@ function multiply(a, b) {
 }
 
 function divide(a, b) {
-  result = a / b;
-  result = Math.round(result * 10000) / 10000;
-  if (result.toString().includes('e')) {
-    result = result.toPrecision(1 + 4);
-    result = result / 1;
+  if (b === 0) {
+    result = 'ERROR';
+  } else {
+    result = a / b;
+    result = Math.round(result * 10000) / 10000;
+    if (result.toString().includes('e')) {
+      result = result.toPrecision(1 + 4);
+      result = result / 1;
   }
+}
 }
 
 function toExponent(a, b) {
@@ -234,6 +249,7 @@ function clear() {
   currentValue = '';
   operator = '';
   secondOperands.innerText = '';
+  result = 0;
 }
 //Reset all the value into empty string
 
@@ -248,7 +264,9 @@ function calculate () {
 //calculate the input and output it on screen
 
 function showCalculation () {
-  if (firstOperand.length > 8 || secondOperand.length > 8) {
+  if (result === 'ERROR') {
+    operands.innerText = '';
+  } else if (firstOperand.length > 8 || secondOperand.length > 8) {
     operands.innerText = firstOperand + operator;
     secondOperands.innerText = secondOperand;
   } else {
@@ -265,3 +283,12 @@ function toggleClear() {
   }
 }
 
+function clearError () {
+  if (sum.innerText.includes('ERROR')) {
+    clear();
+  }
+  
+  if (firstOperand === '' && operator !== '') {
+    clear();
+  }
+}
