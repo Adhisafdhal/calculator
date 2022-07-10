@@ -4,7 +4,7 @@
 }
 
 body {
-  background-color: #F7F4E9;
+  background-image: linear-gradient(to right, #283048 , #859398);
   display: flex;
   flex-direction: column;
   justify-content: center;
