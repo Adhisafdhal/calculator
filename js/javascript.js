@@ -89,8 +89,27 @@ function input(e) {
 //if the user haven't chose the operator input the first clicked operator else return/
 
 function keyInput(e) {
-  console.log(e.keyCode);
-  
+  const key = e.keyCode;
+  if (key >47 && key < 58) {
+  const number = document.querySelector(`button[data-keycode="${e.keyCode}"]`);
+  const target = number.innerText;
+  inputNumber(target);
+  } else if (key === 8) {
+    deleteOperand();
+  } else if (key === 13) {
+    isEqual();
+  } else if (key === 67) {
+    clear();
+  } else if (key === 173 || key === 61 || key === 68 || key === 88 || key === 69) {
+    const operatorTarget = document.querySelector(`button[data-keycode="${e.keyCode}"]`);
+    const target = operatorTarget.innerText;
+    checkCalculationState(target);
+  } else if (key === 80) {
+    showPercentage();
+  } else {
+    return;
+  }
+  toggleClear();
 }
 
 function add(a, b) {
@@ -225,7 +244,7 @@ function clearError () {
     clear();
   }
   
-  if (firstOperand === '' && operator !== '') {
+  if (firstOperand.toString().length === 0 && operator !== '') {
     clear();
   }
 }
@@ -266,10 +285,10 @@ function separateInput(target) {
 }
 //insert input to screen
 function checkCalculationState(target) {
-  if (operator === '' ) {
+  if (operator === '') {
     operator = target;
   }
-
+  
   if (firstOperand === '') {
     firstOperand = currentValue;
     output.innerText = '';
@@ -283,8 +302,6 @@ function checkCalculationState(target) {
   } else {
     showCalculation();
   }
-  
-  clearError();
 }
 //show calculation and calculate if both operand exist
 function isEqual() {
