@@ -3,8 +3,8 @@ const output = document.querySelector('.output');
 const operands = document.querySelector('.short');
 const secondOperands = document.querySelector('.long');
 const sum = document.querySelector('.sum')
-output.style.fontSize = '2rem';
-let currentFont = output.style.fontSize.slice(0, 1);
+output.style.fontSize = '1.8rem';
+let currentFont = output.style.fontSize.slice(0, -3);
 let currentValue = '';
 let firstOperand = '';
 let secondOperand = '';
@@ -33,25 +33,24 @@ buttons.forEach(button => button.addEventListener('transitionend', removeTransit
 //remove transition effect
 
 function changeFontSize() {
-
   if (output.clientWidth > maxOutputWidth) {
     if (currentFont > 1) {
-    output.style.fontSize = `${currentFont -= 0.3}` + 'rem'; 
+    output.style.fontSize = `${currentFont -= 0.2}` + 'rem'; 
     }
   }
   
   if (output.innerText.length < 12) {
-    if (currentFont < 2) {
-    output.style.fontSize = `${currentFont += 0.3}` + 'rem';
+    if (currentFont < 1.8) {
+    output.style.fontSize = `${currentFont += 0.2}` + 'rem';
     }
   }
 }
 
 function changeSumFont(result) {
-  if (result.toString().length >= 20) {
+  if (result.toString().length >= 15) {
     sum.style.fontSize = '1rem'
-  } else if (result.toString().length > 15) {
-    sum.style.fontSize = '1.2rem';
+  } else if (result.toString().length > 10) {
+    sum.style.fontSize = '1.3rem';
   } else {
     sum.style.fontSize = '1.5rem';
   }
@@ -89,25 +88,25 @@ function input(e) {
 //if the user haven't chose the operator input the first clicked operator else return/
 
 function keyInput(e) {
-  const key = e.keyCode;
-  if (key >47 && key < 58) {
-  const number = document.querySelector(`button[data-keycode="${e.keyCode}"]`);
+  const key = e.key;
+  if (key >= 0 && key <= 9) {
+  const number = document.querySelector(`button[data-key="${e.key}"]`);
   const target = number.innerText;
   inputNumber(target);
-  } else if (key === 8) {
+  } else if (key.toLowerCase() === `backspace`) {
     deleteOperand();
-  } else if (key === 13) {
+  } else if (key.toLowerCase() === 'enter') {
     isEqual();
-  } else if (key === 67) {
+  } else if (key.toLowerCase() === 'c') {
     clear();
-  } else if (key === 173 || key === 61 || key === 68 || key === 88 || key === 69) {
-    const operatorTarget = document.querySelector(`button[data-keycode="${e.keyCode}"]`);
+  } else if (key === '+' || key === '-' || key === '*' || key === '/' || key === '^') {
+    const operatorTarget = document.querySelector(`button[data-key="${e.key}"]`);
     const target = operatorTarget.innerText;
     checkCalculationState(target);
-  } else if (key === 80) {
+  } else if (key === '%') {
     showPercentage();
-  } else if (key === 190) {
-    const operatorTarget = document.querySelector(`button[data-keycode="${e.keyCode}"]`);
+  } else if (key === '.') {
+    const operatorTarget = document.querySelector(`button[data-key="${e.key}"]`);
     const target = operatorTarget.innerText;
     addFloat(target);
   } else {
@@ -224,9 +223,13 @@ function calculate () {
 //calculate the input and output it on screen
 
 function showCalculation () {
+  const firstLength = Number(firstOperand.toString().length);
+  const secondLength = Number(secondOperand.toString().length);
+  const total = firstLength + secondLength;
+  console.log(total);
   if (result === 'ERROR') {
     operands.innerText = '';
-  } else if (firstOperand.toString().length > 8 || secondOperand.toString().length > 8) {
+  } else if (total > 20) {
     operands.innerText = firstOperand + operator;
     secondOperands.innerText = secondOperand;
   } else {
@@ -261,12 +264,12 @@ function inputNumber(target) {
       clear();
     } else {
       output.innerText = output.innerText + target;
+      changeFontSize();
       currentValue += target;
       separateInput(target);
       }
     }
   }
-  changeFontSize();
 }
 
 function addFloat(target) {
@@ -343,9 +346,6 @@ function deleteOperand() {
   }
   output.innerText = output.innerText.slice(0, - 1);
   currentValue = currentValue.slice(0, -1);
+  changeFontSize();
 }
 //reduce currentValue length
-
-function keyboardInput(target) {
-console.log(target)
-}
