@@ -59,6 +59,8 @@ function changeSumFont(result) {
 //This will change the font size too big too fit in its container
 
 function input(e) {
+  transition(e);
+  toggleClear();
   const target = e.target.innerText;
   const parentTarget = e.target.parentElement.dataset.name;
   const dtName = e.target.dataset.name;
@@ -79,8 +81,6 @@ function input(e) {
   } else {
     return;
   }
-  transition(e);
-  toggleClear();
   //make sum fontSize responsive
 }
 //currentValue will safe the input of the number and will input the number to the firstOperand or secondOperand 
