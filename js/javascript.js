@@ -127,7 +127,7 @@ function add(a, b) {
 
 function subtract(a, b) {
   result = a - b;
-  result = Math.round(result * 10000) / 10000;
+  result = Math.round(result * 100) / 100;
   if (result.toString().includes('e')) {
     result = result.toPrecision(1 + 4);
     result = result / 1;
@@ -136,7 +136,7 @@ function subtract(a, b) {
 
 function multiply(a, b) {
   result = a * b;
-  result = Math.round(result * 10000) / 10000;
+  result = Math.round(result * 100) / 100;
   if (result.toString().includes('e')) {
     result = result.toPrecision(1 + 4);
     result = result / 1;
@@ -149,6 +149,7 @@ function divide(a, b) {
   } else {
     result = a / b;
     result = Math.round(result * 10000) / 10000;
+    result = result / 1;
     if (result.toString().includes('e')) {
       result = result.toPrecision(1 + 4);
       result = result / 1;
@@ -167,7 +168,7 @@ function toExponent(a, b) {
 
 function toPercentage(a, b) {
   result = a / b;
-  result = Math.round(result * 10000) / 10000;
+  result = Math.round(result * 1000) / 1000;
   if (result.toString().includes('e')) {
     result = result.toPrecision(1 + 4);
     result = result / 1;
