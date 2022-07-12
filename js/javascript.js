@@ -60,7 +60,6 @@ function changeSumFont(result) {
 
 function input(e) {
   transition(e);
-  toggleClear();
   const target = e.target.innerText;
   const parentTarget = e.target.parentElement.dataset.name;
   const dtName = e.target.dataset.name;
@@ -112,7 +111,6 @@ function keyInput(e) {
   } else {
     return;
   }
-  toggleClear();
 }
 
 function add(a, b) {
@@ -271,6 +269,7 @@ function inputNumber(target) {
       }
     }
   }
+  toggleClear();
 }
 
 function addFloat(target) {
@@ -281,6 +280,7 @@ function addFloat(target) {
       separateInput(target);
     } 
   }
+  toggleClear();
   changeFontSize();
 }
 //input number
