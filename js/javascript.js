@@ -184,11 +184,22 @@ function checkPercentage() {
     currentValue = '';
     showCalculation();
   }
+  
   if (firstOperand.toString().includes('%') === true) {
     firstOperand = firstOperand.slice(0, -1);
+    firstOperand = toPercentage(firstOperand, 1);
   } else if (secondOperand.toString().includes('%') === true) {
-      secondOperand = secondOperand.slice(0, -1);
+    secondOperand = secondOperand.slice(0, -1);
+    console.log(firstOperand, secondOperand)
+    if (operator !== '%') {
       secondOperand = toPercentage(secondOperand, firstOperand);
+    } else {
+      let passValue = firstOperand;
+      firstOperand = secondOperand;
+      secondOperand = passValue;
+      console.log(firstOperand, secondOperand)
+      passValue = '';
+    }
   } else {
     return;
   }
@@ -343,9 +354,14 @@ function checkCalculationState(target) {
 }
 //show calculation and calculate if both operand exist
 function isEqual() {
+  onePercentage();
+
   if (secondOperand === '' && operator !== '' && currentValue !== '') {
       secondOperand = currentValue;
+    } else {
+      return;
     }
+
   if (firstOperand !== '' && secondOperand !== '') {
       showCalculation();
       calculate();
@@ -382,4 +398,14 @@ function addPercentage(target) {
     }
   }
   changeFontSize();
+}
+
+function onePercentage() {
+  if (currentValue.toString().includes('%') && secondOperand === '' && operator === '' && firstOperand === '') {
+    firstOperand = currentValue.slice(0, -1);
+    firstOperand = toPercentage(firstOperand, 1)
+    calculate();
+  } else {
+    return;
+  }
 }
