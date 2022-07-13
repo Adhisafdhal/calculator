@@ -9,7 +9,6 @@ let currentValue = '';
 let firstOperand = '';
 let secondOperand = '';
 let operator = '';
-let percentage = '';
 let result = 0;
 const maxOutputWidth = output.clientWidth;
 
@@ -196,15 +195,15 @@ function checkPercentage() {
     } else {
       let passValue = firstOperand;
       firstOperand = secondOperand;
-      secondOperand = passValue;
-      console.log(firstOperand, secondOperand)
+      secondOperand = passValue/100;
+      
       passValue = '';
     }
   } else {
     return;
   }
 }
-//show result of percentage
+//check if operand contain percentage
 function operate(a, b) {
   a = Number(a);
   b = Number(b);
