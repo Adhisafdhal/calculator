@@ -9,6 +9,7 @@ let currentValue = '';
 let firstOperand = '';
 let secondOperand = '';
 let operator = '';
+let percentage = '';
 let result = 0;
 const maxOutputWidth = output.clientWidth;
 
@@ -76,7 +77,7 @@ function input(e) {
   } else if (dtName === 'equal') {
     isEqual();
   } else if (dtName === 'percentage') {
-    showPercentage();
+    addPercentage(target);
   } else {
     return;
   }
@@ -103,7 +104,8 @@ function keyInput(e) {
     const target = operatorTarget.innerText;
     checkCalculationState(target);
   } else if (key === '%') {
-    showPercentage();
+    const target = key;
+    addPercentage(target);
   } else if (key === '.') {
     const operatorTarget = document.querySelector(`button[data-key="${e.key}"]`);
     const target = operatorTarget.innerText;
@@ -165,14 +167,33 @@ function toExponent(a, b) {
 }
 
 function toPercentage(a, b) {
-  result = a / b;
+  result = b / 100 * a;
   result = Math.round(result * 1000) / 1000;
   if (result.toString().includes('e')) {
     result = result.toPrecision(1 + 4);
     result = result / 1;
   }
+  return (Math.round((b / 100 * a) * 1000) / 1000);
 }
 
+function checkPercentage() {
+  if (firstOperand === '' && currentValue.toString().includes('%') === true) {
+    firstOperand = currentValue.slice(0, -1);
+    operator = '%';
+    output.innerText = '';
+    currentValue = '';
+    showCalculation();
+  }
+  if (firstOperand.toString().includes('%') === true) {
+    firstOperand = firstOperand.slice(0, -1);
+  } else if (secondOperand.toString().includes('%') === true) {
+      secondOperand = secondOperand.slice(0, -1);
+      secondOperand = toPercentage(secondOperand, firstOperand);
+  } else {
+    return;
+  }
+}
+//show result of percentage
 function operate(a, b) {
   a = Number(a);
   b = Number(b);
@@ -187,7 +208,7 @@ function operate(a, b) {
     divide(a, b);
   } else if (operator === '^') {
     toExponent(a,b);
-  } else if (operator === '%') {
+  } else if (operator=== '%') {
     toPercentage(a, b);
   } else {
     return
@@ -211,12 +232,14 @@ function clear() {
 //Reset all the value into empty string
 
 function calculate () {
+  checkPercentage();
   operate(firstOperand, secondOperand);
   firstOperand = result;
   sum.innerText = `= ${result}`;
   output.innerText = '';
   secondOperand = '';
   currentValue = '';
+  operator = '';
   changeSumFont(result);
 }
 //calculate the input and output it on screen
@@ -225,7 +248,6 @@ function showCalculation () {
   const firstLength = Number(firstOperand.toString().length);
   const secondLength = Number(secondOperand.toString().length);
   const total = firstLength + secondLength;
-  console.log(total);
   if (result === 'ERROR') {
     operands.innerText = '';
   } else if (total > 20) {
@@ -259,16 +281,20 @@ function clearError () {
 function inputNumber(target) {
   if (/[0-9]/.test(target)) {
     if (output.innerText.length < 15) {
-    if (firstOperand === result && operator === '') {
-      clear();
-    } else {
-      output.innerText = output.innerText + target;
-      changeFontSize();
-      currentValue += target;
-      separateInput(target);
+      if (firstOperand === result && operator === '') {
+        clear();
+      } else if (firstOperand !== '' && currentValue.toString().includes('%') === true) {
+        return;
+      } else {
+        checkPercentage();
+        output.innerText = output.innerText + target;
+        changeFontSize();
+        currentValue += target;
+        separateInput(target);
       }
     }
   }
+ 
   toggleClear();
 }
 
@@ -292,11 +318,15 @@ function separateInput(target) {
   }
 }
 //insert input to screen
-function checkCalculationState(target) {
+function pickOperator(target) {
   if (operator === '') {
-    operator = target;
+    if (currentValue !== '' || firstOperand !== '') {
+      operator = target;
+    }
   }
-  
+}
+function checkCalculationState(target) {
+  pickOperator(target);
   if (firstOperand === '') {
     firstOperand = currentValue;
     output.innerText = '';
@@ -313,30 +343,17 @@ function checkCalculationState(target) {
 }
 //show calculation and calculate if both operand exist
 function isEqual() {
-  if (secondOperand === '' && operator !== '') {
-    secondOperand = currentValue;
+  if (secondOperand === '' && operator !== '' && currentValue !== '') {
+      secondOperand = currentValue;
     }
-
   if (firstOperand !== '' && secondOperand !== '') {
       showCalculation();
       calculate();
-      operator = '';
+  } else {
+    return;
   }
 }
 //show the result
-function showPercentage() {
-  if (firstOperand !== '') {
-    firstOperand = firstOperand;
-  } else {
-    firstOperand = currentValue;
-  }
-  secondOperand = 100;
-  operator = '%';
-  showCalculation();
-  calculate();
-  operator = '';
-}
-//show result of percentage
 function deleteOperand() {
   if (currentValue.toString().length > 0) {
     if (firstOperand.toString().length > 8 && operator !== '') {
@@ -350,3 +367,19 @@ function deleteOperand() {
   changeFontSize();
 }
 //reduce currentValue length
+function addPercentage(target) {
+  if (firstOperand !== '') {
+    if (operator === '') {
+      operator = '%';
+      checkCalculationState(target)
+    }
+  }
+  if (currentValue !== '' && target === '%') {
+    if (currentValue.toString().includes('%') === false) {
+    output.innerText = output.innerText + target;
+    currentValue += target
+    separateInput(target);
+    }
+  }
+  changeFontSize();
+}
